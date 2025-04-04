@@ -3,8 +3,8 @@
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionTypeBadge from "../_components/type-badge";
-import { TRANSACTION_CATEGORY_LABELS } from "../data/category-labels";
-import { TRANSACTION_PAYMENT_METHOD_LABELS } from "../data/payment-method-labels";
+import { TRANSACTION_CATEGORY_LABELS } from "../_data/category-labels";
+import { TRANSACTION_PAYMENT_METHOD_LABELS } from "../_data/payment-method-labels";
 import { Button } from "@/app/_components/ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
 
