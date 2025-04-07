@@ -3,10 +3,11 @@
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionTypeBadge from "../_components/type-badge";
-import { TRANSACTION_CATEGORY_LABELS } from "../_data/category-labels";
 import { TRANSACTION_PAYMENT_METHOD_LABELS } from "../_data/payment-method-labels";
 import { Button } from "@/app/_components/ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
+import { TRANSACTION_CATEGORY_LABELS } from "../_data/category-labels";
+import { formatDatePtBR } from "@/app/_lib/utils";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -36,11 +37,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "date",
     header: "Data",
     cell: ({ row: { original: transaction } }) =>
-      new Date(transaction.date).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      }),
+      formatDatePtBR(transaction.date),
   },
   {
     accessorKey: "amount",
