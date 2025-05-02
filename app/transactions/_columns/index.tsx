@@ -7,7 +7,7 @@ import { TRANSACTION_PAYMENT_METHOD_LABELS } from "../_data/payment-method-label
 import { Button } from "@/app/_components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { TRANSACTION_CATEGORY_LABELS } from "../_data/category-labels";
-import { formatDatePtBR } from "@/app/_lib/utils";
+import { formatDatePtBR, parseToCurrencyValue } from "@/app/_lib/utils";
 import { EditTransactionButton } from "../_components/edit-transaction-button";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
@@ -44,10 +44,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "amount",
     header: "Valor",
     cell: ({ row: { original: transaction } }) =>
-      new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(Number(transaction.amount)),
+      parseToCurrencyValue(Number(transaction.amount)),
   },
   {
     accessorKey: "actions",
