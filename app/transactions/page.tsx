@@ -13,7 +13,7 @@ const TransactionsPage = async () => {
   }
   const transactions = await db.transaction.findMany({
     where: {
-      userId, //mesma coisa que --> userId: userId já que o nome é o mesmo
+      userId, //mesma coisa que --> userId: userId já que o nome é o mesmo (short hand operator)
     },
   });
 

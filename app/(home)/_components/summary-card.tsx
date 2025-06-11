@@ -10,7 +10,7 @@ interface IconProps {
 interface SummaryCardProps {
   icon: IconProps;
   title: string;
-  ammount: string;
+  ammount: number;
   isAddButton?: boolean;
   className?: string;
 }

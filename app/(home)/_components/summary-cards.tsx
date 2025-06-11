@@ -5,8 +5,47 @@ import {
   WalletIcon,
 } from "lucide-react";
 import SummaryCard from "./summary-card";
+import { db } from "@/app/_lib/prisma";
 
-const SummaryCards = () => {
+interface SummaryCardsProps {
+  month?: string;
+}
+
+const SummaryCards = async ({ month }: SummaryCardsProps) => {
+  const where = {
+    date: {
+      gte: new Date(`2025-${month}-01`),
+      lt: new Date(`2025-${month}-31`),
+    },
+  };
+  const depositsTotal = Number(
+    (
+      await db.transaction.aggregate({
+        where: { ...where, type: "DEPOSIT" },
+        _sum: { amount: true },
+      })
+    )?._sum.amount || 0,
+  );
+
+  const investmentsTotal = Number(
+    (
+      await db.transaction.aggregate({
+        where: { ...where, type: "INVESTMENT" },
+        _sum: { amount: true },
+      })
+    )?._sum.amount || 0,
+  );
+
+  const expensesTotal = Number(
+    (
+      await db.transaction.aggregate({
+        where: { ...where, type: "EXPENSE" },
+        _sum: { amount: true },
+      })
+    )?._sum.amount || 0,
+  );
+
+  const balance = depositsTotal + investmentsTotal - expensesTotal;
   return (
     <div className="space-y-4">
       <SummaryCard
@@ -15,7 +54,7 @@ const SummaryCards = () => {
           className: "bg-white/10 text-[#FFFFFF]",
         }}
         title="Saldo"
-        ammount="1000"
+        ammount={balance}
         isAddButton={true}
       />
       <div className="grid grid-cols-4 gap-4">
@@ -25,7 +64,7 @@ const SummaryCards = () => {
             className: "bg-[#FFFFFF]/20 text-[#FFFFFF]",
           }}
           title="Investido"
-          ammount="1000"
+          ammount={investmentsTotal}
           className="col-span-2"
         />
         <SummaryCard
@@ -34,7 +73,7 @@ const SummaryCards = () => {
             className: "bg-[#39BE00]/20 text-[#39BE00]",
           }}
           title="Receita"
-          ammount="1000"
+          ammount={depositsTotal}
         />
         <SummaryCard
           icon={{
@@ -42,7 +81,7 @@ const SummaryCards = () => {
             className: "bg-[#F6352E]/20 text-[#F6352E]",
           }}
           title="Despesa"
-          ammount="1000"
+          ammount={expensesTotal}
         />
       </div>
     </div>
