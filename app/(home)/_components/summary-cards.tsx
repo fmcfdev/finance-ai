@@ -56,6 +56,7 @@ const SummaryCards = async ({ month }: SummaryCardsProps) => {
         title="Saldo"
         ammount={balance}
         isAddButton={true}
+        className="bg-white/5"
       />
       <div className="grid grid-cols-4 gap-4">
         <SummaryCard
