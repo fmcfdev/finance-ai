@@ -7,10 +7,19 @@ export const TRANSACTION_TYPE_LABELS = {
 };
 
 export const TRANSACTION_TYPE_OPTIONS = [
-  { value: TransactionType.EXPENSE, label: TRANSACTION_TYPE_LABELS.EXPENSE },
-  { value: TransactionType.DEPOSIT, label: TRANSACTION_TYPE_LABELS.DEPOSIT },
+  {
+    value: TransactionType.EXPENSE,
+    label: TRANSACTION_TYPE_LABELS.EXPENSE,
+    color: "#55B02E",
+  },
+  {
+    value: TransactionType.DEPOSIT,
+    label: TRANSACTION_TYPE_LABELS.DEPOSIT,
+    color: "#E93030",
+  },
   {
     value: TransactionType.INVESTMENT,
     label: TRANSACTION_TYPE_LABELS.INVESTMENT,
+    color: "#FFFFFF",
   },
 ];
