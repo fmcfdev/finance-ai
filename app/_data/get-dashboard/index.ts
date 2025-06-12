@@ -1,4 +1,6 @@
 import { db } from "@/app/_lib/prisma";
+import { TransactionType } from "@prisma/client";
+import { TransactionPercentageProps } from "./types";
 
 export const getDashboard = async (month: string) => {
   const where = {
@@ -33,10 +35,31 @@ export const getDashboard = async (month: string) => {
       })
     )?._sum.amount || 0,
   );
+
+  const TransactionTotals = Number(
+    (
+      await db.transaction.aggregate({
+        where,
+        _sum: { amount: true },
+      })
+    )._sum.amount,
+  );
+  const typesPercentage: TransactionPercentageProps = {
+    [TransactionType.DEPOSIT]: Math.round(
+      (Number(depositsTotal || 0) / TransactionTotals) * 100,
+    ),
+    [TransactionType.EXPENSE]: Math.round(
+      (Number(expensesTotal || 0) / TransactionTotals) * 100,
+    ),
+    [TransactionType.INVESTMENT]: Math.round(
+      (Number(investmentsTotal || 0) / TransactionTotals) * 100,
+    ),
+  };
   return {
     depositsTotal,
     investmentsTotal,
     expensesTotal,
     balance: depositsTotal + investmentsTotal - expensesTotal,
+    typesPercentage,
   };
 };
