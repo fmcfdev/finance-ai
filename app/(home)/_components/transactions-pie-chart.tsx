@@ -13,7 +13,7 @@ import { TransactionType } from "@prisma/client";
 import { TRANSACTION_TYPE_OPTIONS } from "@/app/transactions/_data/transaction_type_labels";
 import { TransactionPercentageProps } from "@/app/_data/get-dashboard/types";
 import { PiggyBankIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react";
-import PercentageItem from "./PercentageItem";
+import PercentageItem from "./percentage-item";
 
 const transactionTypeInvestment = TRANSACTION_TYPE_OPTIONS.find(
   (option) => option.value === TransactionType.INVESTMENT,

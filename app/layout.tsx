@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mulish.className} dark antialiased`}
+        className={`${mulish.className} dark flex flex-col overflow-hidden antialiased`}
         cz-shortcut-listen="true"
       >
         <ClerkProvider
