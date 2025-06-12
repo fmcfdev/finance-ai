@@ -3,12 +3,12 @@
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionTypeBadge from "../_components/type-badge";
-import { TRANSACTION_PAYMENT_METHOD_LABELS } from "../_data/payment-method-labels";
 import { Button } from "@/app/_components/ui/button";
 import { TrashIcon } from "lucide-react";
 import { TRANSACTION_CATEGORY_LABELS } from "../_data/category-labels";
 import { formatDatePtBR, parseToCurrencyValue } from "@/app/_lib/utils";
 import { EditTransactionButton } from "../_components/edit-transaction-button";
+import { TRANSACTION_PAYMENT_METHOD_UI_PROPS } from "../_data/payment-method-labels";
 
 export const transactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -32,7 +32,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
     accessorKey: "paymentMethod",
     header: "Método",
     cell: ({ row: { original: transaction } }) =>
-      TRANSACTION_PAYMENT_METHOD_LABELS[transaction.paymentMethod],
+      TRANSACTION_PAYMENT_METHOD_UI_PROPS[transaction.paymentMethod].label,
   },
   {
     accessorKey: "date",

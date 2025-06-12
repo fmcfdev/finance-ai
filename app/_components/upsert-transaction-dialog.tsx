@@ -226,11 +226,16 @@ export const UpsertTransactionDialog = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {TRANSACTION_PAYMENT_METHOD_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
+                      {TRANSACTION_PAYMENT_METHOD_OPTIONS.map(
+                        (paymentMethod) => (
+                          <SelectItem
+                            key={paymentMethod.key}
+                            value={paymentMethod.key}
+                          >
+                            {paymentMethod.label}
+                          </SelectItem>
+                        ),
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />

@@ -10,12 +10,12 @@ export const TRANSACTION_TYPE_OPTIONS = [
   {
     value: TransactionType.EXPENSE,
     label: TRANSACTION_TYPE_LABELS.EXPENSE,
-    color: "#55B02E",
+    color: "#E93030",
   },
   {
     value: TransactionType.DEPOSIT,
     label: TRANSACTION_TYPE_LABELS.DEPOSIT,
-    color: "#E93030",
+    color: "#55B02E",
   },
   {
     value: TransactionType.INVESTMENT,
