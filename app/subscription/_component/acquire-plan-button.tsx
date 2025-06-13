@@ -7,12 +7,12 @@ import { loadStripe } from "@stripe/stripe-js";
 const handleAcquirePlanClick = async () => {
   const { sessionId } = await createStripeCheckout();
 
-  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHBLE_KEY) {
+  if (!process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_PUBLISHABLE_KEY) {
     throw new Error("Stripe publishble key not found");
   }
 
   const stripe = await loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHBLE_KEY,
+    process.env.NEXT_PUBLIC_PAYMENT_GATEWAY_PUBLISHABLE_KEY,
   );
 
   if (!stripe) {

@@ -8,11 +8,11 @@ export const createStripeCheckout = async () => {
   if (!userId) {
     throw new Error("Unauthorized");
   }
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!process.env.PAYMENT_GATEWAY_SECRET_KEY) {
     throw new Error("Stripe secret key not found");
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  const stripe = new Stripe(process.env.PAYMENT_GATEWAY_SECRET_KEY, {
     apiVersion: "2024-10-28.acacia",
   });
 
@@ -28,7 +28,7 @@ export const createStripeCheckout = async () => {
     },
     line_items: [
       {
-        price: process.env.STRIPE_PRO_PLAN_PRICE_ID,
+        price: process.env.PAYMENT_GATEWAY_PRO_PLAN_PRICE_ID,
         quantity: 1,
       },
     ],
