@@ -9,11 +9,11 @@ import {
   CardTitle,
 } from "../_components/ui/card";
 import { CheckIcon, XIcon } from "lucide-react";
-import { Button } from "../_components/ui/button";
 import AcquirePlanButton from "./_component/acquire-plan-button";
+import ActivePlanBadge from "./_component/active-plan-badge";
 
-const SubscriptionPage = async () => {
-  const { userId } = await auth();
+const SubscriptionPage = () => {
+  const { userId } = auth();
   if (!userId) {
     redirect("/login");
   }
@@ -29,11 +29,7 @@ const SubscriptionPage = async () => {
           <Card>
             <CardHeader className="flex items-center gap-4 border-b-[1px] py-10">
               <CardTitle className="grid w-full grid-cols-[1fr,2fr,1fr] items-center">
-                <div className="text-[16px] text-primary">
-                  <span className="rounded-full bg-white/[5%] px-2 py-1 font-bold">
-                    Atual
-                  </span>
-                </div>
+                <ActivePlanBadge plan="Free" />
                 <div className="text-center text-2xl">Plano básico</div>
                 <div></div>
               </CardTitle>
@@ -58,15 +54,18 @@ const SubscriptionPage = async () => {
                   <XIcon /> ...
                 </p>
               </div>
-              <Button className="w-full rounded-full border-[1px] border-primary bg-transparent text-primary">
+              {/* <Button
+                className="w-full rounded-full border-primary text-primary hover:bg-primary/30"
+                variant="outline"
+              >
                 Fazer Upgrade
-              </Button>
+              </Button> */}
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex items-center gap-4 border-b-[1px] py-10">
               <CardTitle className="grid w-full grid-cols-[1fr,2fr,1fr] items-center">
-                <div></div>
+                <ActivePlanBadge plan="Pro" />
                 <div className="text-center text-2xl">Plano Pro</div>
                 <div></div>
               </CardTitle>

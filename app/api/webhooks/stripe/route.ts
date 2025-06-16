@@ -1,3 +1,4 @@
+import { PlanType } from "@/app/subscription/_data/plan-types";
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -55,11 +56,31 @@ export const POST = async (request: Request) => {
           stripeSubscriptionId: subscription,
         },
         publicMetadata: {
-          subscriptionPlan: "pro",
+          subscriptionPlan: PlanType.pro,
         },
       });
 
       break;
+    }
+
+    case "customer.subscription.deleted": {
+      const subscription = await stripe.subscriptions.retrieve(
+        event.data.object.id,
+      );
+      const clerkUserId = subscription.metadata.clerk_user_id;
+      if (!clerkUserId) {
+        console.error("NÂO ENCONTROU CLERK ID");
+        return NextResponse.error();
+      }
+      await clerkClient().users.updateUser(clerkUserId, {
+        privateMetadata: {
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+        },
+        publicMetadata: {
+          subscriptionPlan: PlanType.free,
+        },
+      });
     }
   }
 
