@@ -8,6 +8,7 @@ import TransactionsPieChart from "./_components/transactions-pie-chart";
 import { getDashboard } from "../_data/get-dashboard";
 import ExpensePerCategory from "./_components/expenses-per-category";
 import LastTransactions from "./_components/lasts-transactions";
+import { GetAIReport } from "../api/OpenAI";
 interface HomeProps {
   searchParams: {
     month?: string;
@@ -15,6 +16,8 @@ interface HomeProps {
 }
 
 const Home = async ({ searchParams: { month } }: HomeProps) => {
+  const result = await GetAIReport(Number(month));
+  console.log(result);
   const { userId } = await auth();
 
   if (!userId) {
@@ -32,6 +35,7 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
 
   return (
     <>
+      <div>{result.content}</div>
       <NavBar />
       <div className="flex h-full flex-col space-y-6 overflow-hidden p-6">
         <div className="flex justify-between">
