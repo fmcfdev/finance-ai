@@ -1,6 +1,6 @@
 import AddTransactionButton from "@/app/_components/add-transaction-button";
 import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
-import { CanUserAddTransaction } from "@/app/_data/get-current-moth-transaction";
+import { CanUserAddTransaction } from "@/app/_data/can-user-add-transaction";
 import { parseToCurrencyValue } from "@/app/_lib/utils";
 interface IconProps {
   image: React.ReactNode;

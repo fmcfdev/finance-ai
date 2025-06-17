@@ -6,7 +6,7 @@ import NavBar from "../_components/navbar";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { ScrollArea } from "../_components/ui/scroll-area";
-import { CanUserAddTransaction } from "../_data/get-current-moth-transaction";
+import { CanUserAddTransaction } from "../_data/can-user-add-transaction";
 
 const TransactionsPage = async () => {
   const { userId } = await auth();
