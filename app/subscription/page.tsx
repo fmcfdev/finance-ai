@@ -11,12 +11,24 @@ import {
 import { CheckIcon, XIcon } from "lucide-react";
 import AcquirePlanButton from "./_component/acquire-plan-button";
 import ActivePlanBadge from "./_component/active-plan-badge";
+import { db } from "../_lib/prisma";
+import { endOfMonth, startOfMonth } from "date-fns";
 
-const SubscriptionPage = () => {
+const SubscriptionPage = async () => {
   const { userId } = auth();
   if (!userId) {
     redirect("/login");
   }
+
+  const currentMonthTransactions: number = await db.transaction.count({
+    where: {
+      userId,
+      createdAt: {
+        gte: startOfMonth(new Date()),
+        lt: endOfMonth(new Date()),
+      },
+    },
+  });
 
   return (
     <>
@@ -45,7 +57,7 @@ const SubscriptionPage = () => {
               <div className="flex flex-col gap-4">
                 <p className="flex gap-2">
                   <CheckIcon className="text-primary" /> Apenas 10 transações
-                  por dia 7/10
+                  por mês ({currentMonthTransactions}/10)
                 </p>
                 <p className="flex gap-2">
                   <XIcon /> Relatórios de IA ilimitados
