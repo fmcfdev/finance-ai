@@ -11,8 +11,7 @@ import {
 import { CheckIcon, XIcon } from "lucide-react";
 import AcquirePlanButton from "./_component/acquire-plan-button";
 import ActivePlanBadge from "./_component/active-plan-badge";
-import { db } from "../_lib/prisma";
-import { endOfMonth, startOfMonth } from "date-fns";
+import { getCurrentMonthTransactions } from "../_data/get-current-moth-transaction";
 
 const SubscriptionPage = async () => {
   const { userId } = auth();
@@ -20,15 +19,7 @@ const SubscriptionPage = async () => {
     redirect("/login");
   }
 
-  const currentMonthTransactions: number = await db.transaction.count({
-    where: {
-      userId,
-      createdAt: {
-        gte: startOfMonth(new Date()),
-        lt: endOfMonth(new Date()),
-      },
-    },
-  });
+  const currentMonthTransaction: number = await getCurrentMonthTransactions();
 
   return (
     <>
@@ -57,7 +48,7 @@ const SubscriptionPage = async () => {
               <div className="flex flex-col gap-4">
                 <p className="flex gap-2">
                   <CheckIcon className="text-primary" /> Apenas 10 transações
-                  por mês ({currentMonthTransactions}/10)
+                  por mês ({currentMonthTransaction}/10)
                 </p>
                 <p className="flex gap-2">
                   <XIcon /> Relatórios de IA ilimitados
@@ -66,12 +57,6 @@ const SubscriptionPage = async () => {
                   <XIcon /> ...
                 </p>
               </div>
-              {/* <Button
-                className="w-full rounded-full border-primary text-primary hover:bg-primary/30"
-                variant="outline"
-              >
-                Fazer Upgrade
-              </Button> */}
             </CardContent>
           </Card>
           <Card>

@@ -8,7 +8,6 @@ import TransactionsPieChart from "./_components/transactions-pie-chart";
 import { getDashboard } from "../_data/get-dashboard";
 import ExpensePerCategory from "./_components/expenses-per-category";
 import LastTransactions from "./_components/lasts-transactions";
-
 interface HomeProps {
   searchParams: {
     month?: string;
