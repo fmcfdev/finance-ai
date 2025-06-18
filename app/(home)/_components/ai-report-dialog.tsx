@@ -15,7 +15,7 @@ import { ScrollArea } from "@/app/_components/ui/scroll-area";
 import { HasUserProPlan } from "@/app/_data/get-clerk-user-metadado";
 import { getMonthName } from "@/app/_utils/date-util";
 import { GetAIReport } from "@/app/api/OpenAI";
-import { FileChartColumnIcon, Loader2Icon } from "lucide-react";
+import { BotIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
@@ -52,16 +52,11 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
     verifyProPlanUser();
   }, []);
 
-  // Função que controla o fechamento:
-  // Se isLoading for true, não fecha de jeito nenhum.
-  // Se quiser permitir fechar só pelo botão Fechar, fechar só quando isLoading false.
   const handleOpenChange = (newOpen: boolean) => {
     if (isLoading && !newOpen) {
-      // Tenta fechar, mas isLoading ativo, não fecha
       return;
     }
     if (!newOpen) {
-      // Limpa conteúdo ao fechar
       setReportContent(null);
     }
     setOpen(newOpen);
@@ -76,7 +71,7 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
           onClick={verifyProPlanUser}
         >
           Relatório IA
-          <FileChartColumnIcon />
+          <BotIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
@@ -84,11 +79,10 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
           <DialogTitle className="mb-4">Relatório FinanceAI</DialogTitle>
           <DialogDescription className="mb-4 text-white/80">
             {hasProPlan ? (
-              <>
+              `
                 Clique no botão abaixo para IA gerar seu relatório de análise
-                financeira do período de{" "}
-                {getMonthName(String(month).padStart(2, "0"))} de 2025.
-              </>
+                financeira do período de ${getMonthName(String(month).padStart(2, "0"))} de 2025.
+              `
             ) : (
               <span className="space-y-2">
                 <p>
