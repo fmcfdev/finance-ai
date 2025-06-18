@@ -28,6 +28,7 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
   const [reportContent, setReportContent] = useState<string | null>(null);
   const [hasProPlan, setHasProPlan] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState(false); // controla o estado do Dialog
 
   const handleAIReport = async () => {
     try {
@@ -51,12 +52,23 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
     verifyProPlanUser();
   }, []);
 
+  // Função que controla o fechamento:
+  // Se isLoading for true, não fecha de jeito nenhum.
+  // Se quiser permitir fechar só pelo botão Fechar, fechar só quando isLoading false.
+  const handleOpenChange = (newOpen: boolean) => {
+    if (isLoading && !newOpen) {
+      // Tenta fechar, mas isLoading ativo, não fecha
+      return;
+    }
+    if (!newOpen) {
+      // Limpa conteúdo ao fechar
+      setReportContent(null);
+    }
+    setOpen(newOpen);
+  };
+
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        if (!open) setReportContent(null);
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -101,12 +113,19 @@ const AIReportDialog = ({ month }: AIReportDialogProps) => {
             )}
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="prose mr-2 max-h-60 pl-2 pr-4 text-justify prose-h3:text-base prose-h3:text-white prose-h4:text-white prose-p:text-sm prose-p:text-white prose-strong:text-white prose-ul:text-sm prose-ul:text-white">
+        <ScrollArea className="prose mr-2 max-h-60 pl-2 pr-4 text-justify prose-h2:text-lg prose-h2:text-white prose-h3:text-base prose-h3:text-white prose-h4:text-white prose-p:text-sm prose-p:text-white prose-strong:text-white prose-ul:text-sm prose-ul:text-white">
           <Markdown>{reportContent}</Markdown>
         </ScrollArea>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Fechar</Button>
+            {/* Botão fecha só se não estiver carregando */}
+            <Button
+              variant="outline"
+              disabled={isLoading}
+              onClick={() => setOpen(false)}
+            >
+              Fechar
+            </Button>
           </DialogClose>
           {hasProPlan ? (
             <Button
