@@ -9,7 +9,7 @@ import {
 } from "@/app/_components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const MONTH_OPTIONS = [
+export const MONTH_OPTIONS = [
   { value: "01", label: "Janeiro" },
   { value: "02", label: "Fevereiro" },
   { value: "03", label: "Março" },

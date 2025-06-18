@@ -1,12 +1,11 @@
 import AddTransactionButton from "@/app/_components/add-transaction-button";
 import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
+import { CanUserAddTransaction } from "@/app/_data/can-user-add-transaction";
 import { parseToCurrencyValue } from "@/app/_lib/utils";
-
 interface IconProps {
   image: React.ReactNode;
   className: string;
 }
-
 interface SummaryCardProps {
   icon: IconProps;
   title: string;
@@ -15,13 +14,15 @@ interface SummaryCardProps {
   className?: string;
 }
 
-const SummaryCard = ({
+const SummaryCard = async ({
   icon,
   title,
   ammount,
   isAddButton = false,
   className = "",
 }: SummaryCardProps) => {
+  const canUserAddTransaction: boolean = await CanUserAddTransaction();
+
   return (
     <>
       <Card className={className}>
@@ -33,7 +34,11 @@ const SummaryCard = ({
           <p className="text-2xl font-bold">
             {parseToCurrencyValue(Number(ammount))}
           </p>
-          {isAddButton && <AddTransactionButton />}
+          {isAddButton && (
+            <AddTransactionButton
+              canUserAddTransaction={canUserAddTransaction}
+            />
+          )}
         </CardContent>
       </Card>
     </>
