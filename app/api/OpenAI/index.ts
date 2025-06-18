@@ -1,46 +1,75 @@
+"use server";
+
+import { HasUserProPlan } from "@/app/_data/get-clerk-user-metadado";
 import { db } from "@/app/_lib/prisma";
-import { PlanType } from "@/app/subscription/_data/plan-types";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { endOfMonth, startOfMonth } from "date-fns";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_SK,
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_SK });
 
 export const GetAIReport = async (month: number) => {
   const { userId } = auth();
-  if (!userId) {
-    throw new Error("User not authenticated.");
-  }
+  if (!userId) throw new Error("User not authenticated.");
 
-  const clerkUser = await clerkClient().users.getUser(userId);
-  const userPlan = clerkUser.publicMetadata.subscriptionPlan;
-  if (userPlan !== PlanType.pro) {
+  if (!(await HasUserProPlan())) {
     throw new Error("Você não possui o plano Pro para gerar o relatório da IA");
   }
 
-  const dateBase = new Date(2025, month - 1);
+  if (isNaN(month) || month < 1 || month > 12) {
+    throw new Error("Mês inválido");
+  }
 
-  const data = await db.transaction.findMany({
+  const dateBase = new Date(2025, month - 1, 1);
+  const start = startOfMonth(dateBase);
+  const end = endOfMonth(dateBase);
+
+  //Busca as transações no banco de dados
+  const transactions = await db.transaction.findMany({
     where: {
       userId,
       date: {
-        gte: startOfMonth(dateBase),
-        lt: endOfMonth(dateBase),
+        gte: start,
+        lte: end,
       },
     },
   });
 
-  const dataString = data
-    .map(
-      (transaction) =>
-        `{"type":"${transaction.type}", "date":"${transaction.date.toISOString().split("T")[0]}", "category":"${transaction.category}", "amount":${transaction.amount}}`,
-    )
+  console.log("Transactions", transactions);
+  if (transactions.length === 0) {
+    return "Nenhum dado foi encontrado para análise no período indicado!";
+  } else {
+    console.log("Transactions", transactions);
+  }
+
+  // Converter transações em JSON
+  const dataString = transactions
+    .map((t) => {
+      const date = t.date.toISOString().split("T")[0];
+      return `{"type":"${t.type}", "date":"${date}", "category":"${t.category}", "amount":${t.amount}}`;
+    })
     .join(",");
 
-  const content = `Analyze my financial data and give me feedback. Explain how my financial health is, where my largest expenses are, how I can grow financially, and provide additional insights about my finances. The data is in JSON format with transaction type, date, category, and amount. Answer me in portuguese, Brazil. Here is the data for analysis: [ ${dataString} ]`;
+  // Prompt para a IA
+  const content = `
+Você é um analista financeiro pessoal experiente. Abaixo estão as minhas transações financeiras em formato JSON com tipo (receita, despesa ou investimento), data, categoria e valor.
 
+Com base nesses dados, faça uma análise completa e profissional da minha situação financeira. Evite repetir os dados sem análise. Foque em:
+
+1. Avaliação da minha saúde financeira: estou gastando mais do que ganho? Minha situação é saudável, preocupante ou crítica?
+2. Identificação das principais categorias de gastos e se há excessos.
+3. Padrões de comportamento financeiro: há sazonalidade, gastos recorrentes ou picos incomuns?
+4. Capacidade de poupança e investimento: estou conseguindo guardar dinheiro? Estou investindo de forma saudável em relação à minha renda?
+5. Sugestões práticas e personalizadas para melhorar minha vida financeira.
+6. Um parecer final objetivo e direto, como se fosse um resumo profissional da análise.
+
+Use uma linguagem acessível e clara, como se estivesse conversando comigo em uma consultoria. O relatório deve ser em português do Brasil.
+
+Dados:
+[ ${dataString} ]
+`;
+
+  // Requisição à IA
   const result = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -52,5 +81,5 @@ export const GetAIReport = async (month: number) => {
     ],
   });
 
-  return result.choices[0].message;
+  return result.choices[0].message.content;
 };

@@ -13,7 +13,7 @@ export const CanUserAddTransaction = async () => {
   if (!userId) {
     throw new Error("Unauthorized");
   }
-  const clerkuser = await clerkClient.users.getUser(userId);
+  const clerkuser = await clerkClient().users.getUser(userId);
   const userPlan = clerkuser.publicMetadata.subscriptionPlan;
   if (userPlan === PlanType.pro) {
     return true;
